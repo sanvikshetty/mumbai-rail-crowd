@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mumbai Rail Analytics | Live Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <button class="mobile-menu-toggle" id="mobileMenuToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+  <nav class="sidebar" id="sidebar">
+    <div class="logo">
+      <i class="fas fa-train"></i>
+      <span>Mumbai Rail</span>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="#dashboard" class="active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+      <li><a href="#crowd"><i class="fas fa-users"></i> Crowd Report</a></li>
+      <li><a href="#emergency"><i class="fas fa-exclamation-triangle"></i> Emergency</a></li>
+      <li><a href="#locator"><i class="fas fa-map-marker-alt"></i> Train Locator</a></li>
+      <li><a href="#express"><i class="fas fa-rocket"></i> Express Trains</a></li>
+      <li><a href="#platform"><i class="fas fa-building"></i> Platform Info</a></li>
+      <li><a href="#composition"><i class="fas fa-train"></i> Train Composition</a></li>
+      <li><a href="#fare"><i class="fas fa-calculator"></i> Fare Calculator</a></li>
+      <li><a href="#facilities"><i class="fas fa-concierge-bell"></i> Station Facilities</a></li>
+      <li><a href="#announcements"><i class="fas fa-bullhorn"></i> Announcements</a></li>
+      <li><a href="#route"><i class="fas fa-route"></i> Route Planner</a></li>
+      <li><a href="#map"><i class="fas fa-map"></i> Network Map</a></li>
+      <li><a href="#analytics"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+      <li><a href="#integration"><i class="fas fa-link"></i> Integrations</a></li>
+      <li><a href="#booking"><i class="fas fa-ticket-alt"></i> Booking</a></li>
+    </ul>
+  </nav>
+  
+  <div class="main-content" id="mainContent">
+    <div class="login-header">
+      <button class="login-btn" id="loginBtn"><i class="fas fa-user"></i> Login</button>
+    </div>
+    <header class="top-header">
+      <div class="header-left">
+        <h1>Live Dashboard</h1>
+        <p>Real-time Mumbai Local Train Analytics</p>
+      </div>
+      <div class="header-right">
+        <div class="status-indicators">
+          <div class="status-item" id="live-clock"><i class="fas fa-clock"></i> Loading...</div>
+          <div class="status-item" id="weatherDisplay"><i class="fas fa-cloud-sun"></i> Loading...</div>
+          <div class="status-item" id="airQuality"><i class="fas fa-wind"></i> Loading...</div>
+          <div class="status-item" id="sunTimes"><i class="fas fa-sun"></i> Loading...</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-content">
+      <section id="dashboard" class="metrics-grid">
+        <div class="metric-card primary">
+          <div class="metric-icon"><i class="fas fa-train"></i></div>
+          <div class="metric-info">
+            <h3>Active Trains</h3>
+            <p class="metric-value" id="trainCount">0</p>
+            <span class="metric-change">+2.5%</span>
+          </div>
+        </div>
+        <div class="metric-card success">
+          <div class="metric-icon"><i class="fas fa-clock"></i></div>
+          <div class="metric-info">
+            <h3>On-time Performance</h3>
+            <p class="metric-value" id="performance">0%</p>
+            <span class="metric-change">+1.2%</span>
+          </div>
+        </div>
+        <div class="metric-card danger">
+          <div class="metric-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <div class="metric-info">
+            <h3>Active Emergencies</h3>
+            <p class="metric-value" id="emergencyCount">0</p>
+            <span class="metric-change">-0.8%</span>
+          </div>
+        </div>
+        <div class="metric-card warning">
+          <div class="metric-icon"><i class="fas fa-ticket-alt"></i></div>
+          <div class="metric-info">
+            <h3>Bookings Today</h3>
+            <p class="metric-value" id="bookingCount">0</p>
+            <span class="metric-change">+5.3%</span>
+          </div>
+        </div>
+        <div class="metric-card info">
+          <div class="metric-icon"><i class="fas fa-dollar-sign"></i></div>
+          <div class="metric-info">
+            <h3>USD Rate</h3>
+            <p class="metric-value" id="usdRate">₹0</p>
+            <span class="metric-change">-0.2%</span>
+          </div>
+        </div>
+        <div class="metric-card secondary">
+          <div class="metric-icon"><i class="fas fa-satellite"></i></div>
+          <div class="metric-info">
+            <h3>ISS Location</h3>
+            <p class="metric-value" id="issLocation">Loading</p>
+            <span class="metric-change">Live</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="analytics-panel">
+        <div class="data-visualization">
+          <div class="data-flow"></div>
+          <div class="metrics-bar">
+            <div class="progress-indicator"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="recommendations-panel">
+        <div class="panel-header">
+          <h3><i class="fas fa-lightbulb"></i> Smart Recommendations</h3>
+          <button id="refreshRecs" class="btn-refresh"><i class="fas fa-sync"></i></button>
+        </div>
+        <div id="recommendationsContainer" class="recommendations-container">
+          <div class="loading-recs">Loading personalized recommendations...</div>
+        </div>
+      </div>
+
+      <section id="crowd" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-users"></i> Crowd Management System</h2>
+          <p>Real-time crowd analytics and density management</p>
+        </div>
+        
+        <div class="crowd-analytics-grid">
+          <div class="crowd-card">
+            <h3><i class="fas fa-chart-area"></i> Live Crowd Density</h3>
+            <div class="density-meter">
+              <div class="density-bar" id="densityBar"></div>
+              <span id="densityPercent">0%</span>
+            </div>
+            <div class="density-status" id="densityStatus">Normal</div>
+          </div>
+          
+          <div class="crowd-card">
+            <h3><i class="fas fa-brain"></i> AI Crowd Prediction</h3>
+            <div class="prediction-display">
+              <div class="prediction-item">Next 30min: <span id="next30min" class="pred-high">High</span></div>
+              <div class="prediction-item">Next 1hr: <span id="next1hr" class="pred-medium">Medium</span></div>
+              <div class="prediction-item">Next 2hr: <span id="next2hr" class="pred-low">Low</span></div>
+            </div>
+            <div class="ai-confidence">Accuracy: <span id="aiAccuracy">94%</span></div>
+          </div>
+          
+          <div class="crowd-card">
+            <h3><i class="fas fa-train"></i> Coach Recommendations</h3>
+            <div class="coach-recommendations">
+              <div class="best-coaches" id="bestCoaches">
+                <div class="coach-rec">🟢 Coach 2: Low crowd</div>
+                <div class="coach-rec">🟢 Coach 11: Low crowd</div>
+                <div class="coach-rec">🟡 Coach 5: Medium crowd</div>
+              </div>
+            </div>
+            <button id="refreshCoaches" class="btn-small">🔄 Refresh</button>
+          </div>
+          
+          <div class="crowd-card">
+            <h3><i class="fas fa-map-marked-alt"></i> Platform Heatmap</h3>
+            <div class="platform-heatmap" id="platformHeatmap">
+              <div class="platform-section hot">Entry</div>
+              <div class="platform-section medium">Middle</div>
+              <div class="platform-section cool">Exit</div>
+            </div>
+            <div class="heatmap-legend">
+              <span class="legend-item"><div class="legend-color hot"></div>Crowded</span>
+              <span class="legend-item"><div class="legend-color medium"></div>Moderate</span>
+              <span class="legend-item"><div class="legend-color cool"></div>Clear</span>
+            </div>
+          </div>
+          
+          <div class="crowd-card">
+            <h3><i class="fas fa-clock"></i> Wait Time Optimizer</h3>
+            <div class="wait-optimizer">
+              <div class="wait-item">Current wait: <span id="currentWait">3 mins</span></div>
+              <div class="wait-item">Next train: <span id="nextTrain">5 mins</span></div>
+              <div class="wait-item">Recommended: <span id="recommendation">Wait for next</span></div>
+            </div>
+          </div>
+          
+          <div class="crowd-card">
+            <h3><i class="fas fa-exclamation-triangle"></i> Live Alerts</h3>
+            <div class="crowd-alerts" id="liveAlerts">
+              <div class="alert-item warning">⚠️ High crowd at Dadar</div>
+              <div class="alert-item info">ℹ️ Platform 2 less crowded</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="crowd-intelligence-panel">
+          <h3><i class="fas fa-robot"></i> Smart Crowd Intelligence</h3>
+          <div class="intelligence-grid">
+            <div class="intel-card">
+              <h4>🎯 Optimal Boarding</h4>
+              <p>Board at <strong>Coach 2</strong> for fastest exit at your destination</p>
+            </div>
+            <div class="intel-card">
+              <h4>⏰ Best Travel Time</h4>
+              <p>Travel <strong>15 mins earlier</strong> to avoid 80% crowd</p>
+            </div>
+            <div class="intel-card">
+              <h4>🚇 Alternative Route</h4>
+              <p>Take <strong>Harbour Line</strong> - 20% less crowded</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="crowd-station-selector">
+          <h3><i class="fas fa-map-pin"></i> Select Station for Crowd Analysis</h3>
+          
+          <div class="station-selector-tabs">
+            <button class="selector-tab active" data-tab="map-select">🗺️ Select from Map</button>
+            <button class="selector-tab" data-tab="dropdown-select">📋 Select from List</button>
+          </div>
+          
+          <div id="map-select" class="selector-tab-content active">
+            <div class="crowd-map-container">
+              <div class="selected-station-display">
+                <div class="selected-for-crowd">
+                  <span class="label">Selected Station:</span>
+                  <span id="selectedCrowdStation" class="station-name">Click to select</span>
+                </div>
+              </div>
+              
+              <div class="crowd-rail-map">
+                <!-- Western Line -->
+                <div class="crowd-line western-crowd-line">
+                  <div class="crowd-line-label">Western Line</div>
+                  <div class="crowd-stations-row">
+                    <div class="crowd-map-station" data-station="Churchgate" data-line="western">Churchgate</div>
+                    <div class="crowd-map-station" data-station="Marine Lines" data-line="western">Marine Lines</div>
+                    <div class="crowd-map-station" data-station="Charni Road" data-line="western">Charni Road</div>
+                    <div class="crowd-map-station" data-station="Grant Road" data-line="western">Grant Road</div>
+                    <div class="crowd-map-station" data-station="Mumbai Central" data-line="western">Mumbai Central</div>
+                    <div class="crowd-map-station" data-station="Dadar" data-line="western">Dadar</div>
+                    <div class="crowd-map-station" data-station="Bandra" data-line="western">Bandra</div>
+                    <div class="crowd-map-station" data-station="Andheri" data-line="western">Andheri</div>
+                    <div class="crowd-map-station" data-station="Borivali" data-line="western">Borivali</div>
+                    <div class="crowd-map-station" data-station="Virar" data-line="western">Virar</div>
+                  </div>
+                </div>
+                
+                <!-- Central Line -->
+                <div class="crowd-line central-crowd-line">
+                  <div class="crowd-line-label">Central Line</div>
+                  <div class="crowd-stations-row">
+                    <div class="crowd-map-station" data-station="CSMT" data-line="central">CSMT</div>
+                    <div class="crowd-map-station" data-station="Dadar" data-line="central">Dadar</div>
+                    <div class="crowd-map-station" data-station="Kurla" data-line="central">Kurla</div>
+                    <div class="crowd-map-station" data-station="Ghatkopar" data-line="central">Ghatkopar</div>
+                    <div class="crowd-map-station" data-station="Thane" data-line="central">Thane</div>
+                    <div class="crowd-map-station" data-station="Kalyan" data-line="central">Kalyan</div>
+                  </div>
+                </div>
+                
+                <!-- Harbour Line -->
+                <div class="crowd-line harbour-crowd-line">
+                  <div class="crowd-line-label">Harbour Line</div>
+                  <div class="crowd-stations-row">
+                    <div class="crowd-map-station" data-station="Wadala" data-line="harbour">Wadala</div>
+                    <div class="crowd-map-station" data-station="Chembur" data-line="harbour">Chembur</div>
+                    <div class="crowd-map-station" data-station="Vashi" data-line="harbour">Vashi</div>
+                    <div class="crowd-map-station" data-station="Nerul" data-line="harbour">Nerul</div>
+                    <div class="crowd-map-station" data-station="Panvel" data-line="harbour">Panvel</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div id="dropdown-select" class="selector-tab-content">
+            <div class="control-group">
+              <select id="stationSelect" class="modern-select">
+                <option value="">Select Station</option>
+                <option value="Churchgate">Churchgate</option>
+                <option value="Dadar">Dadar</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Borivali">Borivali</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="crowd-analysis-controls">
+            <select id="timeSlot" class="modern-select">
+              <option value="current">Current Time</option>
+              <option value="morning">Morning Peak</option>
+              <option value="evening">Evening Peak</option>
+              <option value="offpeak">Off Peak</option>
+            </select>
+            <button id="analyzeCrowd" class="btn-primary"><i class="fas fa-search"></i> Analyze Crowd</button>
+            <button id="enableAlerts" class="btn-success"><i class="fas fa-bell"></i> Enable Alerts</button>
+            <button id="clearCrowdSelection" class="btn-secondary">❌ Clear</button>
+          </div>
+        </div>
+        
+        <div class="coach-guide">
+          <h3><i class="fas fa-train"></i> Coach Layout Guide</h3>
+          <div class="train-layout">
+            <div class="direction-indicator">← Direction of Travel →</div>
+            <div class="coach-visual">
+              <div class="coach-box" data-coach="1">1<br><small>First</small></div>
+              <div class="coach-box" data-coach="2">2<br><small>General</small></div>
+              <div class="coach-box ladies" data-coach="3">3<br><small>Ladies</small></div>
+              <div class="coach-box" data-coach="4">4<br><small>General</small></div>
+              <div class="coach-box" data-coach="5">5<br><small>General</small></div>
+              <div class="coach-box" data-coach="6">6<br><small>General</small></div>
+              <div class="coach-box" data-coach="7">7<br><small>General</small></div>
+              <div class="coach-box ladies" data-coach="8">8<br><small>Ladies</small></div>
+              <div class="coach-box" data-coach="9">9<br><small>General</small></div>
+              <div class="coach-box" data-coach="10">10<br><small>General</small></div>
+              <div class="coach-box" data-coach="11">11<br><small>General</small></div>
+              <div class="coach-box" data-coach="12">12<br><small>Last</small></div>
+            </div>
+            <div class="coach-legend">
+              <span class="legend-item"><div class="legend-box general"></div>General Coach</span>
+              <span class="legend-item"><div class="legend-box ladies"></div>Ladies Coach</span>
+              <span class="legend-item"><div class="legend-box first"></div>First/Last Coach</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-container">
+          <h3><i class="fas fa-edit"></i> Submit Crowd Report</h3>
+          <form id="crowdForm" class="modern-form">
+            <div class="input-group">
+              <div class="field-group">
+                <label for="station">📍 Select Station:</label>
+                <select name="station" id="station" class="modern-select" required>
+                <option value="">Select Station</option>
+                <optgroup label="Western Line">
+                  <option value="Churchgate">Churchgate</option>
+                  <option value="Marine Lines">Marine Lines</option>
+                  <option value="Charni Road">Charni Road</option>
+                  <option value="Grant Road">Grant Road</option>
+                  <option value="Mumbai Central">Mumbai Central</option>
+                  <option value="Mahalaxmi">Mahalaxmi</option>
+                  <option value="Lower Parel">Lower Parel</option>
+                  <option value="Elphinstone Road">Elphinstone Road</option>
+                  <option value="Dadar">Dadar</option>
+                  <option value="Matunga Road">Matunga Road</option>
+                  <option value="Mahim">Mahim</option>
+                  <option value="Bandra">Bandra</option>
+                  <option value="Khar Road">Khar Road</option>
+                  <option value="Santacruz">Santacruz</option>
+                  <option value="Vile Parle">Vile Parle</option>
+                  <option value="Andheri">Andheri</option>
+                  <option value="Jogeshwari">Jogeshwari</option>
+                  <option value="Ram Mandir">Ram Mandir</option>
+                  <option value="Goregaon">Goregaon</option>
+                  <option value="Malad">Malad</option>
+                  <option value="Kandivali">Kandivali</option>
+                  <option value="Borivali">Borivali</option>
+                  <option value="Dahisar">Dahisar</option>
+                  <option value="Mira Road">Mira Road</option>
+                  <option value="Bhayandar">Bhayandar</option>
+                  <option value="Naigaon">Naigaon</option>
+                  <option value="Vasai Road">Vasai Road</option>
+                  <option value="Nallasopara">Nallasopara</option>
+                  <option value="Virar">Virar</option>
+                </optgroup>
+                <optgroup label="Central Line">
+                  <option value="CSMT">CSMT</option>
+                  <option value="Masjid">Masjid</option>
+                  <option value="Sandhurst Road">Sandhurst Road</option>
+                  <option value="Dockyard Road">Dockyard Road</option>
+                  <option value="Reay Road">Reay Road</option>
+                  <option value="Cotton Green">Cotton Green</option>
+                  <option value="Sewri">Sewri</option>
+                  <option value="Wadala Road">Wadala Road</option>
+                  <option value="Kings Circle">Kings Circle</option>
+                  <option value="Matunga">Matunga</option>
+                  <option value="Sion">Sion</option>
+                  <option value="Kurla">Kurla</option>
+                  <option value="Vidyavihar">Vidyavihar</option>
+                  <option value="Ghatkopar">Ghatkopar</option>
+                  <option value="Vikhroli">Vikhroli</option>
+                  <option value="Kanjurmarg">Kanjurmarg</option>
+                  <option value="Bhandup">Bhandup</option>
+                  <option value="Nahur">Nahur</option>
+                  <option value="Mulund">Mulund</option>
+                  <option value="Thane">Thane</option>
+                  <option value="Kalwa">Kalwa</option>
+                  <option value="Mumbra">Mumbra</option>
+                  <option value="Diva">Diva</option>
+                  <option value="Kopar">Kopar</option>
+                  <option value="Dombivli">Dombivli</option>
+                  <option value="Thakurli">Thakurli</option>
+                  <option value="Kalyan">Kalyan</option>
+                </optgroup>
+                <optgroup label="Harbour Line">
+                  <option value="Wadala">Wadala</option>
+                  <option value="GTB Nagar">GTB Nagar</option>
+                  <option value="Chunabhatti">Chunabhatti</option>
+                  <option value="Chembur">Chembur</option>
+                  <option value="Govandi">Govandi</option>
+                  <option value="Mankhurd">Mankhurd</option>
+                  <option value="Vashi">Vashi</option>
+                  <option value="Sanpada">Sanpada</option>
+                  <option value="Juinagar">Juinagar</option>
+                  <option value="Nerul">Nerul</option>
+                  <option value="Seawoods Darave">Seawoods Darave</option>
+                  <option value="Belapur CBD">Belapur CBD</option>
+                  <option value="Kharghar">Kharghar</option>
+                  <option value="Mansarovar">Mansarovar</option>
+                  <option value="Khandeshwar">Khandeshwar</option>
+                  <option value="Panvel">Panvel</option>
+                </optgroup>
+              </select>
+              </div>
+              <div class="field-group">
+                <label for="coach">🚂 Coach Number (1-12):</label>
+                <input name="coach" id="coach" placeholder="Enter coach number" type="number" min="1" max="12" required />
+              </div>
+              <div class="field-group">
+                <label for="density">👥 Crowd Level:</label>
+                <select name="density" id="density" class="modern-select" required>
+                <option value="">Crowd Level</option>
+                <option value="low">🟢 Low (0-30%)</option>
+                <option value="medium">🟡 Medium (30-70%)</option>
+                <option value="high">🟠 High (70-90%)</option>
+                <option value="overcrowded">🔴 Overcrowded (90%+)</option>
+              </select>
+              </div>
+              <div class="field-group">
+                <label for="platform">🚉 Platform (Optional):</label>
+                <select name="platform" id="platform" class="modern-select">
+                <option value="">Platform (Optional)</option>
+                <option value="1">Platform 1</option>
+                <option value="2">Platform 2</option>
+                <option value="3">Platform 3</option>
+                <option value="4">Platform 4</option>
+                <option value="overcrowded">🔴 Overcrowded (90%+)</option>
+              </select>
+              </div>
+              <div class="field-group">
+                <button type="submit" class="btn-primary"><i class="fas fa-paper-plane"></i> Submit Report</button>
+              </div>
+            </div>
+          </form>
+          
+          <div class="crowd-recommendations" id="crowdRecommendations">
+            <h4><i class="fas fa-lightbulb"></i> Smart Suggestions</h4>
+            <div id="suggestions">
+              <div class="suggestion-item">💡 Try Coach 3 or 10 for less crowd</div>
+              <div class="suggestion-item">⏰ Next train in 4 mins will be less crowded</div>
+              <div class="suggestion-item">🚶 Walk to the far end of platform for easier boarding</div>
+            </div>
+          </div>
+          
+          <div class="crowd-stats">
+            <h4><i class="fas fa-chart-bar"></i> Live Statistics</h4>
+            <div class="stats-grid">
+              <div class="stat-item">
+                <span class="stat-label">Average Crowd:</span>
+                <span class="stat-value" id="avgCrowd">65%</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Peak Time:</span>
+                <span class="stat-value" id="peakTime">8:45 AM</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Least Crowded:</span>
+                <span class="stat-value" id="leastCrowded">Coach 2</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Reports Today:</span>
+                <span class="stat-value" id="reportsToday">1,247</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="data-display">
+            <h4><i class="fas fa-list"></i> Recent Reports</h4>
+            <ul id="dataList" class="data-list">
+              <li class="crowd-report high">Andheri - Coach 7 - High crowd - 2 mins ago</li>
+              <li class="crowd-report medium">Bandra - Coach 4 - Medium crowd - 5 mins ago</li>
+              <li class="crowd-report low">Dadar - Coach 11 - Low crowd - 8 mins ago</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="emergency" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-exclamation-triangle"></i> Emergency Reporting</h2>
+          <p>Report incidents and emergencies immediately for quick response</p>
+        </div>
+        
+        <div class="emergency-guidelines">
+          <h4><i class="fas fa-info-circle"></i> How to Report Emergency</h4>
+          <div class="guidelines-grid">
+            <div class="guideline-item">
+              <strong>Coach Number:</strong> Enter 1-12 (e.g., 5, 8, 11)
+            </div>
+            <div class="guideline-item">
+              <strong>Description:</strong> Brief details (e.g., "Medical emergency", "Fire in coach", "Suspicious activity")
+            </div>
+            <div class="guideline-item">
+              <strong>Priority:</strong> High for life-threatening, Medium for safety concerns, Low for minor issues
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-container">
+          <form id="emergencyForm" class="modern-form">
+            <div class="input-group">
+              <input name="coach" placeholder="Enter Coach Number (1-12)" type="number" min="1" max="12" required />
+              <input name="message" placeholder="Describe the emergency (e.g., Medical emergency, Fire, Accident)" required />
+              <select name="severity" class="severity-select" required>
+                <option value="">Select Priority Level</option>
+                <option value="high">🔴 High Priority (Life-threatening)</option>
+                <option value="medium">🟡 Medium Priority (Safety concern)</option>
+                <option value="low">🟢 Low Priority (Minor issue)</option>
+              </select>
+              <button type="submit" class="btn-danger"><i class="fas fa-exclamation-circle"></i> Report Emergency</button>
+            </div>
+          </form>
+          
+          <div class="emergency-examples">
+            <h4><i class="fas fa-lightbulb"></i> Example Reports</h4>
+            <div class="examples-list">
+              <div class="example-item high">🔴 "Passenger collapsed in coach 7" - High Priority</div>
+              <div class="example-item medium">🟡 "Smoke detected in coach 3" - Medium Priority</div>
+              <div class="example-item low">🟢 "AC not working in coach 5" - Low Priority</div>
+            </div>
+          </div>
+          
+          <div class="data-display">
+            <h4><i class="fas fa-list"></i> Recent Emergency Reports</h4>
+            <ul id="emergencyList" class="data-list">
+              <li class="emergency-report sample">Sample: Coach 4 - Medical assistance needed - HIGH - 10:30 AM</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section id="locator" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-map-marker-alt"></i> Train Locator</h2>
+          <p>Find real-time train locations across Mumbai</p>
+        </div>
+        <div class="locator-container">
+          <div class="locator-controls">
+            <button id="findNearest" class="btn-success"><i class="fas fa-location-arrow"></i> Find Nearest Station</button>
+            <button id="useNearestFrom" class="btn-info"><i class="fas fa-map-pin"></i> Use as From Station</button>
+            <div id="nearestStation" class="nearest-result"></div>
+            <select id="trainSelector" class="modern-select">
+              <optgroup label="Western Railway Stations">
+                <option value="Churchgate">Churchgate</option>
+                <option value="Marine Lines">Marine Lines</option>
+                <option value="Charni Road">Charni Road</option>
+                <option value="Grant Road">Grant Road</option>
+                <option value="Mumbai Central">Mumbai Central</option>
+                <option value="Mahalaxmi">Mahalaxmi</option>
+                <option value="Lower Parel">Lower Parel</option>
+                <option value="Elphinstone Road">Elphinstone Road</option>
+                <option value="Dadar">Dadar</option>
+                <option value="Matunga Road">Matunga Road</option>
+                <option value="Mahim">Mahim</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Khar Road">Khar Road</option>
+                <option value="Santacruz">Santacruz</option>
+                <option value="Vile Parle">Vile Parle</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Jogeshwari">Jogeshwari</option>
+                <option value="Ram Mandir">Ram Mandir</option>
+                <option value="Goregaon">Goregaon</option>
+                <option value="Malad">Malad</option>
+                <option value="Kandivali">Kandivali</option>
+                <option value="Borivali">Borivali</option>
+                <option value="Dahisar">Dahisar</option>
+                <option value="Mira Road">Mira Road</option>
+                <option value="Bhayandar">Bhayandar</option>
+                <option value="Naigaon">Naigaon</option>
+                <option value="Vasai Road">Vasai Road</option>
+                <option value="Nallasopara">Nallasopara</option>
+                <option value="Virar">Virar</option>
+              </optgroup>
+              <optgroup label="Central Railway Stations">
+                <option value="CSMT">CSMT</option>
+                <option value="Masjid">Masjid</option>
+                <option value="Sandhurst Road">Sandhurst Road</option>
+                <option value="Dockyard Road">Dockyard Road</option>
+                <option value="Reay Road">Reay Road</option>
+                <option value="Cotton Green">Cotton Green</option>
+                <option value="Sewri">Sewri</option>
+                <option value="Wadala Road">Wadala Road</option>
+                <option value="Kings Circle">Kings Circle</option>
+                <option value="Matunga">Matunga</option>
+                <option value="Sion">Sion</option>
+                <option value="Kurla">Kurla</option>
+                <option value="Vidyavihar">Vidyavihar</option>
+                <option value="Ghatkopar">Ghatkopar</option>
+                <option value="Vikhroli">Vikhroli</option>
+                <option value="Kanjurmarg">Kanjurmarg</option>
+                <option value="Bhandup">Bhandup</option>
+                <option value="Nahur">Nahur</option>
+                <option value="Mulund">Mulund</option>
+                <option value="Thane">Thane</option>
+                <option value="Kalwa">Kalwa</option>
+                <option value="Mumbra">Mumbra</option>
+                <option value="Diva">Diva</option>
+                <option value="Kopar">Kopar</option>
+                <option value="Dombivli">Dombivli</option>
+                <option value="Thakurli">Thakurli</option>
+                <option value="Kalyan">Kalyan</option>
+              </optgroup>
+              <optgroup label="Harbour Line Stations">
+                <option value="Wadala">Wadala</option>
+                <option value="GTB Nagar">GTB Nagar</option>
+                <option value="Chunabhatti">Chunabhatti</option>
+                <option value="Chembur">Chembur</option>
+                <option value="Govandi">Govandi</option>
+                <option value="Mankhurd">Mankhurd</option>
+                <option value="Vashi">Vashi</option>
+                <option value="Sanpada">Sanpada</option>
+                <option value="Juinagar">Juinagar</option>
+                <option value="Nerul">Nerul</option>
+                <option value="Seawoods Darave">Seawoods Darave</option>
+                <option value="Belapur CBD">Belapur CBD</option>
+                <option value="Kharghar">Kharghar</option>
+                <option value="Mansarovar">Mansarovar</option>
+                <option value="Khandeshwar">Khandeshwar</option>
+                <option value="Panvel">Panvel</option>
+              </optgroup>
+            </select>
+            <button id="locateTrain" class="btn-success"><i class="fas fa-search"></i> Locate Train</button>
+          </div>
+          <div id="trainLocation" class="location-result"></div>
+          <div class="train-status-section">
+            <div class="status-controls">
+              <select id="lineSelector" class="modern-select">
+                <option value="all">All Lines</option>
+                <option value="western">Western Line</option>
+                <option value="central">Central Line</option>
+                <option value="harbour">Harbour Line</option>
+              </select>
+              <button id="refreshStatus" class="btn-info"><i class="fas fa-sync"></i> Refresh Status</button>
+            </div>
+            <div id="trainStatusContainer" class="status-container"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="express" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-rocket"></i> Express Trains</h2>
+          <p>Fast train schedules and journey comparisons</p>
+        </div>
+        <div class="express-section">
+          <div class="express-tabs">
+            <button class="tab-btn active" data-tab="schedule">Schedule</button>
+            <button class="tab-btn" data-tab="comparison">Journey Comparison</button>
+            <button class="tab-btn" data-tab="availability">Seat Availability</button>
+          </div>
+          
+          <div id="schedule-tab" class="tab-content active">
+            <div class="express-controls">
+              <select id="expressLineSelector" class="modern-select">
+                <option value="western">Western Line</option>
+                <option value="central">Central Line</option>
+                <option value="harbour">Harbour Line</option>
+              </select>
+              <select id="expressDirection" class="modern-select">
+                <option value="up">Up (Towards Suburbs)</option>
+                <option value="down">Down (Towards City)</option>
+              </select>
+            </div>
+            <div id="expressSchedule" class="express-schedule"></div>
+          </div>
+          
+          <div id="comparison-tab" class="tab-content">
+            <div class="comparison-form">
+              <select id="fromStation" class="modern-select">
+                <option value="">Select From Station</option>
+                <option value="Churchgate">Churchgate</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Borivali">Borivali</option>
+                <option value="Virar">Virar</option>
+              </select>
+              <select id="toStation" class="modern-select">
+                <option value="">Select To Station</option>
+                <option value="Churchgate">Churchgate</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Borivali">Borivali</option>
+                <option value="Virar">Virar</option>
+              </select>
+              <button id="compareBtn" class="btn-primary">Compare Journey Time</button>
+            </div>
+            <div id="comparisonResult" class="comparison-result"></div>
+          </div>
+          
+          <div id="availability-tab" class="tab-content">
+            <div class="availability-grid">
+              <div class="availability-card">
+                <h4>AC Local</h4>
+                <div class="seats-info">
+                  <span class="available">Available: 45</span>
+                  <span class="waiting">Waiting: 12</span>
+                </div>
+                <button class="btn-success">Book Now</button>
+              </div>
+              <div class="availability-card">
+                <h4>First Class</h4>
+                <div class="seats-info">
+                  <span class="available">Available: 23</span>
+                  <span class="waiting">Waiting: 8</span>
+                </div>
+                <button class="btn-success">Book Now</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="platform" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-building"></i> Platform Information</h2>
+          <p>Real-time platform status and crowd levels</p>
+        </div>
+        <div class="platform-selector">
+          <select id="platformStationSelect" class="modern-select">
+            <option value="">Select Station</option>
+            <optgroup label="Western Line">
+              <option value="Churchgate">Churchgate</option>
+              <option value="Marine Lines">Marine Lines</option>
+              <option value="Charni Road">Charni Road</option>
+              <option value="Grant Road">Grant Road</option>
+              <option value="Mumbai Central">Mumbai Central</option>
+              <option value="Dadar">Dadar</option>
+              <option value="Bandra">Bandra</option>
+              <option value="Andheri">Andheri</option>
+              <option value="Borivali">Borivali</option>
+              <option value="Virar">Virar</option>
+            </optgroup>
+            <optgroup label="Central Line">
+              <option value="CSMT">CSMT</option>
+              <option value="Masjid">Masjid</option>
+              <option value="Dadar">Dadar</option>
+              <option value="Kurla">Kurla</option>
+              <option value="Ghatkopar">Ghatkopar</option>
+              <option value="Thane">Thane</option>
+              <option value="Kalyan">Kalyan</option>
+            </optgroup>
+            <optgroup label="Harbour Line">
+              <option value="Wadala">Wadala</option>
+              <option value="GTB Nagar">GTB Nagar</option>
+              <option value="Chunabhatti">Chunabhatti</option>
+              <option value="Chembur">Chembur</option>
+              <option value="Govandi">Govandi</option>
+              <option value="Mankhurd">Mankhurd</option>
+              <option value="Vashi">Vashi</option>
+              <option value="Sanpada">Sanpada</option>
+              <option value="Juinagar">Juinagar</option>
+              <option value="Nerul">Nerul</option>
+              <option value="Seawoods Darave">Seawoods Darave</option>
+              <option value="Belapur CBD">Belapur CBD</option>
+              <option value="Kharghar">Kharghar</option>
+              <option value="Mansarovar">Mansarovar</option>
+              <option value="Khandeshwar">Khandeshwar</option>
+              <option value="Panvel">Panvel</option>
+            </optgroup>
+          </select>
+          <button id="getPlatformInfo" class="btn-primary">Get Platform Info</button>
+        </div>
+        <div id="platformDisplay"></div>
+      </section>
+
+      <section id="composition" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-train"></i> Train Composition</h2>
+          <p>Coach layout and special compartments</p>
+        </div>
+        <div class="composition-controls">
+          <input id="trainNumber" placeholder="Enter Train Number" class="modern-select">
+          <button id="getComposition" class="btn-primary">Get Composition</button>
+        </div>
+        <div id="compositionDisplay"></div>
+      </section>
+
+      <section id="fare" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-calculator"></i> Fare Calculator</h2>
+          <p>Calculate ticket prices for your journey</p>
+        </div>
+        <div class="fare-calculator">
+          <div class="fare-inputs">
+            <select id="fareFrom" class="modern-select">
+              <option value="">From Station</option>
+              <option value="Churchgate">Churchgate</option>
+              <option value="Bandra">Bandra</option>
+              <option value="Andheri">Andheri</option>
+              <option value="Thane">Thane</option>
+              <option value="Kalyan">Kalyan</option>
+            </select>
+            <select id="fareTo" class="modern-select">
+              <option value="">To Station</option>
+              <option value="Churchgate">Churchgate</option>
+              <option value="Bandra">Bandra</option>
+              <option value="Andheri">Andheri</option>
+              <option value="Thane">Thane</option>
+              <option value="Kalyan">Kalyan</option>
+            </select>
+            <select id="ticketType" class="modern-select">
+              <option value="single">Single Journey</option>
+              <option value="return">Return Journey</option>
+              <option value="monthly">Monthly Pass</option>
+              <option value="quarterly">Quarterly Pass</option>
+            </select>
+            <select id="passengerType" class="modern-select">
+              <option value="adult">Adult</option>
+              <option value="student">Student</option>
+              <option value="senior">Senior Citizen</option>
+            </select>
+            <button id="calculateFare" class="btn-primary">Calculate Fare</button>
+          </div>
+          <div id="fareResult"></div>
+        </div>
+      </section>
+
+      <section id="facilities" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-concierge-bell"></i> Station Facilities</h2>
+          <p>Find amenities and services at stations</p>
+        </div>
+        <div class="facilities-search">
+          <select id="facilityStation" class="modern-select">
+            <option value="">Select Station</option>
+            <option value="Churchgate">Churchgate</option>
+            <option value="Bandra">Bandra</option>
+            <option value="Andheri">Andheri</option>
+            <option value="Thane">Thane</option>
+          </select>
+          <button id="getFacilities" class="btn-primary">Get Facilities</button>
+        </div>
+        <div id="facilitiesDisplay"></div>
+      </section>
+
+      <section id="announcements" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-bullhorn"></i> Live Announcements</h2>
+          <p>Latest updates and service alerts</p>
+        </div>
+        <div id="announcementsContainer" class="announcements-container"></div>
+      </section>
+
+      <section id="route" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-route"></i> Interactive Route Planner</h2>
+          <p>Click stations on map or use dropdowns to plan your journey</p>
+        </div>
+        
+        <div class="route-selector-tabs">
+          <button class="route-tab active" data-tab="map">📍 Select from Map</button>
+          <button class="route-tab" data-tab="dropdown">📋 Select from List</button>
+        </div>
+        
+        <div id="map-selector" class="route-tab-content active">
+          <div class="interactive-map-container">
+            <div class="map-header">
+              <h3>🗺️ Click stations on the map to select</h3>
+              <div class="selection-display">
+                <div class="selected-station from">
+                  <span class="label">From:</span>
+                  <span id="selectedFrom" class="station-name">Click to select</span>
+                </div>
+                <div class="selected-station to">
+                  <span class="label">To:</span>
+                  <span id="selectedTo" class="station-name">Click to select</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="interactive-rail-map">
+              <!-- Western Line -->
+              <div class="rail-line western-line">
+                <div class="line-label">Western Line</div>
+                <div class="stations-row">
+                  <div class="map-station" data-station="Churchgate" data-line="western">Churchgate</div>
+                  <div class="map-station" data-station="Marine Lines" data-line="western">Marine Lines</div>
+                  <div class="map-station" data-station="Charni Road" data-line="western">Charni Road</div>
+                  <div class="map-station" data-station="Grant Road" data-line="western">Grant Road</div>
+                  <div class="map-station" data-station="Mumbai Central" data-line="western">Mumbai Central</div>
+                  <div class="map-station" data-station="Mahalaxmi" data-line="western">Mahalaxmi</div>
+                  <div class="map-station" data-station="Lower Parel" data-line="western">Lower Parel</div>
+                  <div class="map-station" data-station="Dadar" data-line="western">Dadar</div>
+                  <div class="map-station" data-station="Matunga Road" data-line="western">Matunga Road</div>
+                  <div class="map-station" data-station="Mahim" data-line="western">Mahim</div>
+                  <div class="map-station" data-station="Bandra" data-line="western">Bandra</div>
+                  <div class="map-station" data-station="Khar Road" data-line="western">Khar Road</div>
+                  <div class="map-station" data-station="Santacruz" data-line="western">Santacruz</div>
+                  <div class="map-station" data-station="Vile Parle" data-line="western">Vile Parle</div>
+                  <div class="map-station" data-station="Andheri" data-line="western">Andheri</div>
+                  <div class="map-station" data-station="Jogeshwari" data-line="western">Jogeshwari</div>
+                  <div class="map-station" data-station="Ram Mandir" data-line="western">Ram Mandir</div>
+                  <div class="map-station" data-station="Goregaon" data-line="western">Goregaon</div>
+                  <div class="map-station" data-station="Malad" data-line="western">Malad</div>
+                  <div class="map-station" data-station="Kandivali" data-line="western">Kandivali</div>
+                  <div class="map-station" data-station="Borivali" data-line="western">Borivali</div>
+                  <div class="map-station" data-station="Dahisar" data-line="western">Dahisar</div>
+                  <div class="map-station" data-station="Mira Road" data-line="western">Mira Road</div>
+                  <div class="map-station" data-station="Bhayandar" data-line="western">Bhayandar</div>
+                  <div class="map-station" data-station="Naigaon" data-line="western">Naigaon</div>
+                  <div class="map-station" data-station="Vasai Road" data-line="western">Vasai Road</div>
+                  <div class="map-station" data-station="Nallasopara" data-line="western">Nallasopara</div>
+                  <div class="map-station" data-station="Virar" data-line="western">Virar</div>
+                </div>
+              </div>
+              
+              <!-- Central Line -->
+              <div class="rail-line central-line">
+                <div class="line-label">Central Line</div>
+                <div class="stations-row">
+                  <div class="map-station" data-station="CSMT" data-line="central">CSMT</div>
+                  <div class="map-station" data-station="Masjid" data-line="central">Masjid</div>
+                  <div class="map-station" data-station="Sandhurst Road" data-line="central">Sandhurst Road</div>
+                  <div class="map-station" data-station="Dockyard Road" data-line="central">Dockyard Road</div>
+                  <div class="map-station" data-station="Reay Road" data-line="central">Reay Road</div>
+                  <div class="map-station" data-station="Cotton Green" data-line="central">Cotton Green</div>
+                  <div class="map-station" data-station="Sewri" data-line="central">Sewri</div>
+                  <div class="map-station" data-station="Wadala Road" data-line="central">Wadala Road</div>
+                  <div class="map-station" data-station="Kings Circle" data-line="central">Kings Circle</div>
+                  <div class="map-station" data-station="Matunga" data-line="central">Matunga</div>
+                  <div class="map-station" data-station="Sion" data-line="central">Sion</div>
+                  <div class="map-station" data-station="Kurla" data-line="central">Kurla</div>
+                  <div class="map-station" data-station="Vidyavihar" data-line="central">Vidyavihar</div>
+                  <div class="map-station" data-station="Ghatkopar" data-line="central">Ghatkopar</div>
+                  <div class="map-station" data-station="Vikhroli" data-line="central">Vikhroli</div>
+                  <div class="map-station" data-station="Kanjurmarg" data-line="central">Kanjurmarg</div>
+                  <div class="map-station" data-station="Bhandup" data-line="central">Bhandup</div>
+                  <div class="map-station" data-station="Nahur" data-line="central">Nahur</div>
+                  <div class="map-station" data-station="Mulund" data-line="central">Mulund</div>
+                  <div class="map-station" data-station="Thane" data-line="central">Thane</div>
+                  <div class="map-station" data-station="Kalwa" data-line="central">Kalwa</div>
+                  <div class="map-station" data-station="Mumbra" data-line="central">Mumbra</div>
+                  <div class="map-station" data-station="Diva" data-line="central">Diva</div>
+                  <div class="map-station" data-station="Kopar" data-line="central">Kopar</div>
+                  <div class="map-station" data-station="Dombivli" data-line="central">Dombivli</div>
+                  <div class="map-station" data-station="Thakurli" data-line="central">Thakurli</div>
+                  <div class="map-station" data-station="Kalyan" data-line="central">Kalyan</div>
+                </div>
+              </div>
+              
+              <!-- Harbour Line -->
+              <div class="rail-line harbour-line">
+                <div class="line-label">Harbour Line</div>
+                <div class="stations-row">
+                  <div class="map-station" data-station="Wadala" data-line="harbour">Wadala</div>
+                  <div class="map-station" data-station="GTB Nagar" data-line="harbour">GTB Nagar</div>
+                  <div class="map-station" data-station="Chunabhatti" data-line="harbour">Chunabhatti</div>
+                  <div class="map-station" data-station="Chembur" data-line="harbour">Chembur</div>
+                  <div class="map-station" data-station="Govandi" data-line="harbour">Govandi</div>
+                  <div class="map-station" data-station="Mankhurd" data-line="harbour">Mankhurd</div>
+                  <div class="map-station" data-station="Vashi" data-line="harbour">Vashi</div>
+                  <div class="map-station" data-station="Sanpada" data-line="harbour">Sanpada</div>
+                  <div class="map-station" data-station="Juinagar" data-line="harbour">Juinagar</div>
+                  <div class="map-station" data-station="Nerul" data-line="harbour">Nerul</div>
+                  <div class="map-station" data-station="Seawoods Darave" data-line="harbour">Seawoods Darave</div>
+                  <div class="map-station" data-station="Belapur CBD" data-line="harbour">Belapur CBD</div>
+                  <div class="map-station" data-station="Kharghar" data-line="harbour">Kharghar</div>
+                  <div class="map-station" data-station="Mansarovar" data-line="harbour">Mansarovar</div>
+                  <div class="map-station" data-station="Khandeshwar" data-line="harbour">Khandeshwar</div>
+                  <div class="map-station" data-station="Panvel" data-line="harbour">Panvel</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="map-controls">
+              <button id="swapStations" class="btn-info">🔄 Swap Stations</button>
+              <button id="clearSelection" class="btn-secondary">❌ Clear Selection</button>
+              <button id="planFromMap" class="btn-primary">🚀 Plan Route</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="dropdown-selector" class="route-tab-content">
+          <div class="route-planner">
+            <div class="route-inputs">
+              <select id="routeFrom" class="modern-select">
+                <option value="">From Station</option>
+                <option value="Churchgate">Churchgate</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Thane">Thane</option>
+                <option value="Kalyan">Kalyan</option>
+              </select>
+              <select id="routeTo" class="modern-select">
+                <option value="">To Station</option>
+                <option value="Churchgate">Churchgate</option>
+                <option value="Bandra">Bandra</option>
+                <option value="Andheri">Andheri</option>
+                <option value="Thane">Thane</option>
+                <option value="Kalyan">Kalyan</option>
+              </select>
+              <select id="travelMode" class="modern-select">
+                <option value="fastest">Fastest Route</option>
+                <option value="cheapest">Cheapest Route</option>
+                <option value="comfortable">Most Comfortable</option>
+              </select>
+              <button id="planRoute" class="btn-primary">Plan Route</button>
+            </div>
+          </div>
+        </div>
+        
+        <div id="routeResults" class="route-results">
+          <div class="route-summary" id="routeSummary"></div>
+          <div class="route-options" id="routeOptions"></div>
+        </div>
+      </section>
+
+      <section id="map" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-map"></i> Network Map</h2>
+          <p>Interactive Mumbai Local train network</p>
+        </div>
+        <div class="map-container">
+          <div class="map-controls">
+            <select id="mapLine" class="modern-select">
+              <option value="all">All Lines</option>
+              <option value="western">Western Line</option>
+              <option value="central">Central Line</option>
+              <option value="harbour">Harbour Line</option>
+            </select>
+            <button id="toggleTrains" class="btn-success"><i class="fas fa-train"></i> Show Live Trains</button>
+            <button id="refreshMap" class="btn-info"><i class="fas fa-sync"></i> Refresh</button>
+          </div>
+          <div id="mapDisplay" class="map-display">
+            <div class="map-tabs">
+              <button class="map-tab active" data-map="google">Google Map</button>
+              <button class="map-tab" data-map="routes">Train Routes</button>
+            </div>
+            <div id="googleMap" class="map-view active">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d241317.11609823277!2d72.74109995709657!3d19.082177513865436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7c6306644edc1%3A0x5da4ed8f8d648c69!2sMumbai%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1703123456789!5m2!1sen!2sin&maptype=transit" 
+                width="100%" 
+                height="500" 
+                style="border:0;border-radius:12px;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+            <div id="routeMap" class="map-view">
+              <div class="route-network">
+                <h3>Mumbai Local Train Network</h3>
+                <div class="route-lines">
+                  <div class="train-line western">
+                    <div class="line-header">Western Line</div>
+                    <div class="stations-chain">
+                      <div class="station-dot">Churchgate</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Marine Lines</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Bandra</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Andheri</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Borivali</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Virar</div>
+                    </div>
+                  </div>
+                  <div class="train-line central">
+                    <div class="line-header">Central Line</div>
+                    <div class="stations-chain">
+                      <div class="station-dot">CSMT</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Dadar</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Kurla</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Thane</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Kalyan</div>
+                    </div>
+                  </div>
+                  <div class="train-line harbour">
+                    <div class="line-header">Harbour Line</div>
+                    <div class="stations-chain">
+                      <div class="station-dot">Wadala</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Chembur</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Vashi</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Nerul</div>
+                      <div class="line-segment"></div>
+                      <div class="station-dot">Panvel</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="map-legend">
+            <h4>Legend</h4>
+            <div class="legend-item">
+              <div class="legend-color western"></div>
+              <span>Western Railway</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color central"></div>
+              <span>Central Railway</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color harbour"></div>
+              <span>Harbour Line</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-color train"></div>
+              <span>Live Trains</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="analytics" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-bar"></i> Analytics Dashboard</h2>
+          <p>Performance metrics and historical data</p>
+        </div>
+        <div class="analytics-tabs">
+          <button class="analytics-tab active" data-tab="delays">Delay Analysis</button>
+          <button class="analytics-tab" data-tab="crowd">Crowd Patterns</button>
+          <button class="analytics-tab" data-tab="performance">Performance</button>
+        </div>
+        <div id="analyticsDisplay"></div>
+      </section>
+
+      <section id="integration" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-link"></i> Service Integrations</h2>
+          <p>Connect with other transport and booking services</p>
+        </div>
+        <div class="integration-grid">
+          <div class="integration-card">
+            <h4><i class="fas fa-bus"></i> BEST Bus</h4>
+            <p>Connect to bus routes</p>
+            <button class="btn-primary">Connect</button>
+          </div>
+          <div class="integration-card">
+            <h4><i class="fas fa-subway"></i> Mumbai Metro</h4>
+            <p>Metro connectivity</p>
+            <button class="btn-primary">Connect</button>
+          </div>
+          <div class="integration-card">
+            <h4><i class="fas fa-taxi"></i> Ola/Uber</h4>
+            <p>Last mile connectivity</p>
+            <button class="btn-primary">Connect</button>
+          </div>
+          <div class="integration-card">
+            <h4><i class="fas fa-plane"></i> Airport Express</h4>
+            <p>Airport connectivity</p>
+            <button class="btn-primary">Connect</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="booking" class="form-section hidden">
+        <div class="section-header">
+          <h2><i class="fas fa-ticket-alt"></i> Ticket Booking</h2>
+          <p>Book your Mumbai Local train tickets</p>
+        </div>
+        <div class="form-container">
+          <form id="bookingForm" class="modern-form">
+            <div class="input-group">
+              <input name="name" placeholder="Passenger Name" required />
+              <select name="from" class="modern-select" required>
+                <option value="">From Station</option>
+                <optgroup label="Western Line">
+                  <option value="Churchgate">Churchgate</option>
+                  <option value="Marine Lines">Marine Lines</option>
+                  <option value="Charni Road">Charni Road</option>
+                  <option value="Grant Road">Grant Road</option>
+                  <option value="Mumbai Central">Mumbai Central</option>
+                  <option value="Mahalaxmi">Mahalaxmi</option>
+                  <option value="Lower Parel">Lower Parel</option>
+                  <option value="Elphinstone Road">Elphinstone Road</option>
+                  <option value="Dadar">Dadar</option>
+                  <option value="Matunga Road">Matunga Road</option>
+                  <option value="Mahim">Mahim</option>
+                  <option value="Bandra">Bandra</option>
+                  <option value="Khar Road">Khar Road</option>
+                  <option value="Santacruz">Santacruz</option>
+                  <option value="Vile Parle">Vile Parle</option>
+                  <option value="Andheri">Andheri</option>
+                  <option value="Jogeshwari">Jogeshwari</option>
+                  <option value="Ram Mandir">Ram Mandir</option>
+                  <option value="Goregaon">Goregaon</option>
+                  <option value="Malad">Malad</option>
+                  <option value="Kandivali">Kandivali</option>
+                  <option value="Borivali">Borivali</option>
+                  <option value="Dahisar">Dahisar</option>
+                  <option value="Mira Road">Mira Road</option>
+                  <option value="Bhayandar">Bhayandar</option>
+                  <option value="Naigaon">Naigaon</option>
+                  <option value="Vasai Road">Vasai Road</option>
+                  <option value="Nallasopara">Nallasopara</option>
+                  <option value="Virar">Virar</option>
+                </optgroup>
+                <optgroup label="Central Line">
+                  <option value="CSMT">CSMT</option>
+                  <option value="Masjid">Masjid</option>
+                  <option value="Sandhurst Road">Sandhurst Road</option>
+                  <option value="Dockyard Road">Dockyard Road</option>
+                  <option value="Reay Road">Reay Road</option>
+                  <option value="Cotton Green">Cotton Green</option>
+                  <option value="Sewri">Sewri</option>
+                  <option value="Wadala Road">Wadala Road</option>
+                  <option value="Kings Circle">Kings Circle</option>
+                  <option value="Matunga">Matunga</option>
+                  <option value="Sion">Sion</option>
+                  <option value="Kurla">Kurla</option>
+                  <option value="Vidyavihar">Vidyavihar</option>
+                  <option value="Ghatkopar">Ghatkopar</option>
+                  <option value="Vikhroli">Vikhroli</option>
+                  <option value="Kanjurmarg">Kanjurmarg</option>
+                  <option value="Bhandup">Bhandup</option>
+                  <option value="Nahur">Nahur</option>
+                  <option value="Mulund">Mulund</option>
+                  <option value="Thane">Thane</option>
+                  <option value="Kalwa">Kalwa</option>
+                  <option value="Mumbra">Mumbra</option>
+                  <option value="Diva">Diva</option>
+                  <option value="Kopar">Kopar</option>
+                  <option value="Dombivli">Dombivli</option>
+                  <option value="Thakurli">Thakurli</option>
+                  <option value="Kalyan">Kalyan</option>
+                </optgroup>
+                <optgroup label="Harbour Line">
+                  <option value="Wadala">Wadala</option>
+                  <option value="GTB Nagar">GTB Nagar</option>
+                  <option value="Chunabhatti">Chunabhatti</option>
+                  <option value="Chembur">Chembur</option>
+                  <option value="Govandi">Govandi</option>
+                  <option value="Mankhurd">Mankhurd</option>
+                  <option value="Vashi">Vashi</option>
+                  <option value="Sanpada">Sanpada</option>
+                  <option value="Juinagar">Juinagar</option>
+                  <option value="Nerul">Nerul</option>
+                  <option value="Seawoods Darave">Seawoods Darave</option>
+                  <option value="Belapur CBD">Belapur CBD</option>
+                  <option value="Kharghar">Kharghar</option>
+                  <option value="Mansarovar">Mansarovar</option>
+                  <option value="Khandeshwar">Khandeshwar</option>
+                  <option value="Panvel">Panvel</option>
+                </optgroup>
+              </select>
+              <select name="to" class="modern-select" required>
+                <option value="">To Station</option>
+                <optgroup label="Western Line">
+                  <option value="Churchgate">Churchgate</option>
+                  <option value="Marine Lines">Marine Lines</option>
+                  <option value="Charni Road">Charni Road</option>
+                  <option value="Grant Road">Grant Road</option>
+                  <option value="Mumbai Central">Mumbai Central</option>
+                  <option value="Mahalaxmi">Mahalaxmi</option>
+                  <option value="Lower Parel">Lower Parel</option>
+                  <option value="Elphinstone Road">Elphinstone Road</option>
+                  <option value="Dadar">Dadar</option>
+                  <option value="Matunga Road">Matunga Road</option>
+                  <option value="Mahim">Mahim</option>
+                  <option value="Bandra">Bandra</option>
+                  <option value="Khar Road">Khar Road</option>
+                  <option value="Santacruz">Santacruz</option>
+                  <option value="Vile Parle">Vile Parle</option>
+                  <option value="Andheri">Andheri</option>
+                  <option value="Jogeshwari">Jogeshwari</option>
+                  <option value="Ram Mandir">Ram Mandir</option>
+                  <option value="Goregaon">Goregaon</option>
+                  <option value="Malad">Malad</option>
+                  <option value="Kandivali">Kandivali</option>
+                  <option value="Borivali">Borivali</option>
+                  <option value="Dahisar">Dahisar</option>
+                  <option value="Mira Road">Mira Road</option>
+                  <option value="Bhayandar">Bhayandar</option>
+                  <option value="Naigaon">Naigaon</option>
+                  <option value="Vasai Road">Vasai Road</option>
+                  <option value="Nallasopara">Nallasopara</option>
+                  <option value="Virar">Virar</option>
+                </optgroup>
+                <optgroup label="Central Line">
+                  <option value="CSMT">CSMT</option>
+                  <option value="Masjid">Masjid</option>
+                  <option value="Sandhurst Road">Sandhurst Road</option>
+                  <option value="Dockyard Road">Dockyard Road</option>
+                  <option value="Reay Road">Reay Road</option>
+                  <option value="Cotton Green">Cotton Green</option>
+                  <option value="Sewri">Sewri</option>
+                  <option value="Wadala Road">Wadala Road</option>
+                  <option value="Kings Circle">Kings Circle</option>
+                  <option value="Matunga">Matunga</option>
+                  <option value="Sion">Sion</option>
+                  <option value="Kurla">Kurla</option>
+                  <option value="Vidyavihar">Vidyavihar</option>
+                  <option value="Ghatkopar">Ghatkopar</option>
+                  <option value="Vikhroli">Vikhroli</option>
+                  <option value="Kanjurmarg">Kanjurmarg</option>
+                  <option value="Bhandup">Bhandup</option>
+                  <option value="Nahur">Nahur</option>
+                  <option value="Mulund">Mulund</option>
+                  <option value="Thane">Thane</option>
+                  <option value="Kalwa">Kalwa</option>
+                  <option value="Mumbra">Mumbra</option>
+                  <option value="Diva">Diva</option>
+                  <option value="Kopar">Kopar</option>
+                  <option value="Dombivli">Dombivli</option>
+                  <option value="Thakurli">Thakurli</option>
+                  <option value="Kalyan">Kalyan</option>
+                </optgroup>
+                <optgroup label="Harbour Line">
+                  <option value="Wadala">Wadala</option>
+                  <option value="GTB Nagar">GTB Nagar</option>
+                  <option value="Chunabhatti">Chunabhatti</option>
+                  <option value="Chembur">Chembur</option>
+                  <option value="Govandi">Govandi</option>
+                  <option value="Mankhurd">Mankhurd</option>
+                  <option value="Vashi">Vashi</option>
+                  <option value="Sanpada">Sanpada</option>
+                  <option value="Juinagar">Juinagar</option>
+                  <option value="Nerul">Nerul</option>
+                  <option value="Seawoods Darave">Seawoods Darave</option>
+                  <option value="Belapur CBD">Belapur CBD</option>
+                  <option value="Kharghar">Kharghar</option>
+                  <option value="Mansarovar">Mansarovar</option>
+                  <option value="Khandeshwar">Khandeshwar</option>
+                  <option value="Panvel">Panvel</option>
+                </optgroup>
+              </select>
+              <input name="date" type="date" required />
+              <button type="submit" class="btn-primary"><i class="fas fa-ticket-alt"></i> Book Ticket</button>
+            </div>
+          </form>
+          <div class="data-display">
+            <ul id="bookingList" class="data-list"></ul>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="backend-core.js"></script>
+  <script>
+    // Fallback functionality if backend-core.js fails
+    window.addEventListener('error', function(e) {
+      if (e.filename && e.filename.includes('backend-core.js')) {
+        console.log('Loading fallback functionality...');
+        
+        // Simple navigation fallback
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.querySelectorAll('.nav-menu a').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            
+            document.querySelectorAll('section').forEach(section => section.classList.add('hidden'));
+            const targetId = link.getAttribute('href').substring(1);
+            const targetSection = document.getElementById(targetId);
+            if (targetSection) targetSection.classList.remove('hidden');
+          });
+        });
+        
+        // Simple form handlers
+        document.getElementById('crowdForm')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          alert('Crowd report submitted!');
+          e.target.reset();
+        });
+        
+        document.getElementById('emergencyForm')?.addEventListener('submit', (e) => {
+          e.preventDefault();
+          alert('Emergency reported!');
+          e.target.reset();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
